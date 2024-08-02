@@ -18,9 +18,11 @@ Interface Moderne : Design intuitif et attractif construit avec Flutter pour une
 
 Avant de commencer, assurez-vous d'avoir les outils suivants installés sur votre machine :
 
-Flutter SDK
-Dart SDK
-Android Studio ou Visual Studio Code avec les plugins Flutter et Dart (facultatif) 
+Flutter SDK;
+
+Dart SDK;
+
+Android Studio ou Visual Studio Code avec les plugins Flutter et Dart (facultatif).
 
 # Installation
 
