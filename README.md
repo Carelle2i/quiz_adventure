@@ -4,7 +4,7 @@
 
 Quiz Adventure est une application interactive de quiz dédiée à l'apprentissage et à l'évaluation des connaissances sur le code de la route. Développée en Flutter, cette application vise à rendre l'apprentissage des règles de circulation dynamique. Les utilisateurs peuvent tester leurs connaissances sous formes de flashcard à travers des questions variées et suivre leurs évolution avec un système de score.
 
-Fonctionnalités
+# Fonctionnalités
 
 Quiz Interactifs : Une série de questions sur le code de la route avec des choix multiples.
 
