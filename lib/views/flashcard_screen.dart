@@ -1,221 +1,264 @@
-import 'package:appinio_swiper/appinio_swiper.dart';
-import 'package:quiz_adventure/views/quiz_screen.dart';
-import 'package:quiz_adventure/widgets/flash_card_widget.dart';
-import 'package:quiz_adventure/widgets/linear_progress_indicator_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
+import 'package:flip_card/flip_card.dart';
+import 'quiz_screen.dart';
 
-
-
-class NewCard extends StatefulWidget {
+class FlashCardScreen extends StatefulWidget {
+  final List<dynamic> cards;
   final String topicName;
-  final List<dynamic> typeOfTopic;
-  const NewCard(
-      {super.key, required this.topicName, required this.typeOfTopic});
+  final String playerName;
+
+  FlashCardScreen({
+    required this.cards,
+    required this.topicName,
+    required this.playerName,
+  });
 
   @override
-  State<NewCard> createState() => _NewCardState();
+  _FlashCardScreenState createState() => _FlashCardScreenState();
 }
 
-class _NewCardState extends State<NewCard> {
-  final AppinioSwiperController controller = AppinioSwiperController();
+class _FlashCardScreenState extends State<FlashCardScreen> {
+  late List<dynamic> _shuffledCards;
+
+  @override
+  void initState() {
+    super.initState();
+    _shuffledCards = List.from(widget.cards);
+  }
+
+  void _shuffleCards() {
+    setState(() {
+      _shuffledCards.shuffle();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    //const Color bgColor = Color(0xFF4993FA);
     const Color bgColor3 = Color(0xFF5170FD);
     const Color cardColor = Color(0xFF4993FA);
 
-    // Get a list of 4 randomly selected Questions objects
-    Map<dynamic, dynamic> randomQuestionsMap =
-        getRandomQuestionsAndOptions(widget.typeOfTopic, 4);
-
-    List<dynamic> randomQuestions = randomQuestionsMap.keys.toList();
-    dynamic randomOptions = randomQuestionsMap.values.toList();
-
     return Scaffold(
       backgroundColor: bgColor3,
+      appBar: AppBar(
+        backgroundColor: bgColor3,
+        elevation: 0,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.close,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
       body: SafeArea(
-        child: Center(
-          child: ListView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.all(16),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
             children: [
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                padding: const EdgeInsets.only(right: 18.0),
-                alignment: Alignment.topCenter,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: const Icon(
-                        CupertinoIcons.clear,
-                        color: Colors.white,
-                        weight: 10,
+              Row(
+                children: [
+                  Expanded(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: LinearProgressIndicator(
+                        minHeight: 20,
+                        value: 1 - (45 / 100),
+                        backgroundColor: Colors.blue.shade100,
+                        color: Colors.blueGrey,
+                        valueColor: const AlwaysStoppedAnimation(cardColor),
                       ),
                     ),
-                    MyProgressIndicator(
-                      questionlenght: randomQuestions,
-                      optionsList: randomOptions,
-                      topicType: widget.topicName,
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.92,
-                height: MediaQuery.of(context).size.height * 0.60,
-                child: AppinioSwiper(
-                  padding: const EdgeInsets.all(10),
-                  loop: true,
-                  backgroundCardsCount: 2,
-                  swipeOptions: const AppinioSwipeOptions.all(),
-                  unlimitedUnswipe: true,
-                  controller: controller,
-                  unswipe: _unswipe,
-                  onSwipe: _swipe,
-                  onEnd: _onEnd,
-                  cardsCount: randomQuestions.length,
-                  cardsBuilder: (BuildContext context, int index) {
-                    var cardIndex = randomQuestions[index];
-                    return FlipCardsWidget(
-                      bgColor: cardColor,
-                      cardsLenght: randomQuestions.length,
-                      currentIndex: index + 1,
-                      answer: cardIndex.correctAnswer.text,
-                      question: cardIndex.text,
-                      currentTopic: widget.topicName,
+              const SizedBox(height: 20),
+              Expanded(
+                child: PageView.builder(
+                  itemCount: _shuffledCards.length,
+                  itemBuilder: (context, index) {
+                    final card = _shuffledCards[index];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: FlipCard(
+                        front: _buildCardFace(
+                          text: card.text,
+                          topicName: widget.topicName,
+                          currentIndex: index + 1,
+                          totalCards: _shuffledCards.length,
+                        ),
+                        back: _buildCardFace(
+                          text: 'Tap to Flip',
+                          topicName: widget.topicName,
+                          currentIndex: index + 1,
+                          totalCards: _shuffledCards.length,
+                        ),
+                      ),
                     );
                   },
                 ),
               ),
-              const SizedBox(
-                height: 50,
-              ),
-              Column(
-                children: [
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(cardColor),
-                      fixedSize: MaterialStateProperty.all(
-                        Size(MediaQuery.of(context).size.width * 0.85, 30),
-                      ),
-                      elevation: MaterialStateProperty.all(4),
-                    ),
-                    onPressed: () => controller.unswipe(),
-                    child: const Text(
-                      "Reorder Cards",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+              ElevatedButton(
+                onPressed: _shuffleCards,
+                child: const Text("Reorder Cards"),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(cardColor),
+                  fixedSize: MaterialStateProperty.all(
+                    Size(MediaQuery.of(context).size.width * 0.80, 40),
                   ),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(cardColor),
-                      fixedSize: MaterialStateProperty.all(
-                        Size(MediaQuery.sizeOf(context).width * 0.85, 30),
-                      ),
-                      elevation: MaterialStateProperty.all(4),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => QuizScreen(
-                            questionlenght: randomQuestions,
-                            optionsList: randomOptions,
-                            topicType: widget.topicName,
-                          ),
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      "Start Quiz",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  )
-                ],
+                  elevation: MaterialStateProperty.all(4),
+                ),
               ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => QuizScreen(
+                        questionlenght: widget.cards,
+                        optionsList: widget.cards.map((q) => q.options).toList(),
+                        topicType: widget.topicName,
+                        playerName: widget.playerName,
+                      ),
+                    ),
+                  );
+                },
+                child: const Text("Start Quiz"),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(cardColor),
+                  fixedSize: MaterialStateProperty.all(
+                    Size(MediaQuery.of(context).size.width * 0.80, 40),
+                  ),
+                  elevation: MaterialStateProperty.all(4),
+                ),
+              ),
+              const SizedBox(height: 20),
             ],
           ),
         ),
       ),
     );
   }
-}
 
-Map<dynamic, dynamic> getRandomQuestionsAndOptions(
-  List<dynamic> allQuestions,
-  int count,
-) {
-  final randomQuestions = <dynamic>[];
-  final randomOptions = <dynamic>[];
-  final random = Random();
+  Widget _buildCardFace({
+    required String text,
+    required String topicName,
+    required int currentIndex,
+    required int totalCards,
+  }) {
+    const Color cardColor = Color(0xFF4993FA);
 
-  if (count >= allQuestions.length) {
-    count = allQuestions.length;
+    return Stack(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: cardColor,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.24),
+                blurRadius: 20.0,
+                offset: const Offset(0.0, 10.0),
+                spreadRadius: 10,
+                blurStyle: BlurStyle.outer,
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      topicName,
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                            color: Colors.white,
+                            fontSize: 15,
+                          ),
+                    ),
+                    Text(
+                      "$currentIndex/$totalCards",
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                            color: Colors.white,
+                            fontSize: 15,
+                          ),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                Center(
+                  child: Text(
+                    text,
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                        ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  "Tap to Flip",
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        color: Colors.white,
+                      ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Positioned(
+          left: -120,
+          top: 30,
+          child: Container(
+            height: 200,
+            width: 200,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.5),
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: Container(
+                height: 100,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: cardColor.withOpacity(0.5),
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          right: -100,
+          bottom: 20,
+          child: Container(
+            height: 200,
+            width: 200,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.5),
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: Container(
+                height: 100,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: cardColor,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
-
-  while (randomQuestions.length < count) {
-    final randomIndex = random.nextInt(allQuestions.length);
-    final selectedQuestion = allQuestions[randomIndex];
-
-    if (!randomQuestions.contains(selectedQuestion)) {
-      randomQuestions.add(selectedQuestion);
-      randomOptions.add(selectedQuestion.options);
-    }
-  }
-
-  return Map.fromIterables(randomQuestions, randomOptions);
-}
-
-// List<dynamic> getRandomQuestions(List<dynamic> allQuestions, int count) {
-//   if (count >= allQuestions.length) {
-//     return List.from(allQuestions);
-//   }
-//   List<dynamic> randomQuestions = [];
-
-//   List<int> indexes = List.generate(allQuestions.length, (index) => index);
-//   final random = Random();
-
-//   while (randomQuestions.length < count) {
-//     final randomIndex = random.nextInt(indexes.length);
-//     final selectedQuestionIndex = indexes[randomIndex];
-//     final selectedQuestion = allQuestions[selectedQuestionIndex];
-//     randomQuestions.add(selectedQuestion);
-
-//     indexes.removeAt(randomIndex);
-//   }
-//   return randomQuestions;
-// }
-
-void _swipe(int index, AppinioSwiperDirection direction) {
-  print("the card was swiped to the: ${direction.name}");
-  print(index);
-}
-
-void _unswipe(bool unswiped) {
-  if (unswiped) {
-    print("SUCCESS: card was unswiped");
-  } else {
-    print("FAIL: no card left to unswipe");
-  }
-}
-
-void _onEnd() {
-  print("end reached!");
 }

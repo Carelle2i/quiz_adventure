@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:quiz_adventure/views/results_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +7,15 @@ class QuizScreen extends StatefulWidget {
   final String topicType;
   final List<dynamic> questionlenght;
   final dynamic optionsList;
-  const QuizScreen(
-      {super.key,
-      required this.questionlenght,
-      required this.optionsList,
-      required this.topicType});
+  final String playerName;
+
+  const QuizScreen({
+    super.key,
+    required this.questionlenght,
+    required this.optionsList,
+    required this.topicType,
+    required this.playerName,
+  });
 
   @override
   State<QuizScreen> createState() => _QuizScreenState();
@@ -67,6 +70,7 @@ class _QuizScreenState extends State<QuizScreen> {
             score: score,
             totalQuestions: widget.questionlenght.length,
             whichTopic: widget.topicType,
+            playerName: widget.playerName,
           ),
         ),
       );
@@ -109,7 +113,7 @@ class _QuizScreenState extends State<QuizScreen> {
                 Row(
                   children: [
                     Text(
-                      "${widget.topicType} Riddles",
+                      "${widget.topicType}",
                       style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                           color: Colors.white,
                           fontSize: 20,
@@ -196,7 +200,6 @@ class _QuizScreenState extends State<QuizScreen> {
 
                                 return Column(
                                   children: [
-                                  
                                     Text(
                                       myquestions.text,
                                       style: Theme.of(context)
@@ -250,6 +253,8 @@ class _QuizScreenState extends State<QuizScreen> {
                                                   score++;
                                                 }
                                               }
+                                              // Update the state to reflect the answer choice
+                                              setState(() {});
                                             },
                                             child: Container(
                                               height: 45,
@@ -324,7 +329,6 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   ElevatedButton buildElevatedButton() {
-    //  const Color bgColor3 = Color(0xFF5170FD);
     const Color cardColor = Color(0xFF4993FA);
 
     return ElevatedButton(
@@ -356,6 +360,7 @@ class _QuizScreenState extends State<QuizScreen> {
                 score: score,
                 totalQuestions: widget.questionlenght.length,
                 whichTopic: widget.topicType,
+                playerName: widget.playerName,
               ),
             ),
           );
@@ -363,8 +368,8 @@ class _QuizScreenState extends State<QuizScreen> {
       },
       child: Text(
         _questionNumber < widget.questionlenght.length
-            ? 'Next Question'
-            : 'Result',
+            ? 'Prochaine Question'
+            : 'Résultat',
         style: Theme.of(context).textTheme.bodySmall!.copyWith(
               color: Colors.white,
               fontSize: 16,

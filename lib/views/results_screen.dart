@@ -2,14 +2,18 @@ import 'package:quiz_adventure/widgets/results_card.dart';
 import 'package:flutter/material.dart';
 
 class ResultsScreen extends StatelessWidget {
-  const ResultsScreen(
-      {super.key,
-      required this.score,
-      required this.totalQuestions,
-      required this.whichTopic});
+  const ResultsScreen({
+    super.key,
+    required this.score,
+    required this.totalQuestions,
+    required this.whichTopic,
+    required this.playerName, 
+  });
+
   final int score;
   final int totalQuestions;
   final String whichTopic;
+  final String playerName; 
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +23,7 @@ class ResultsScreen extends StatelessWidget {
     final double percentageScore = (score / totalQuestions) * 100;
     final int roundedPercentageScore = percentageScore.round();
     const Color cardColor = Color(0xFF4993FA);
+    // ignore: deprecated_member_use
     return WillPopScope(
       onWillPop: () {
         Navigator.popUntil(context, (route) => route.isFirst);
@@ -50,7 +55,7 @@ class ResultsScreen extends StatelessWidget {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: "Results On Your ",
+                      text: "Résultats de ton ",
                       style:
                           Theme.of(context).textTheme.headlineSmall!.copyWith(
                                 color: Colors.white,
@@ -58,9 +63,9 @@ class ResultsScreen extends StatelessWidget {
                                 fontWeight: FontWeight.w400,
                               ),
                     ),
-                    for (var i = 0; i < "Riddles!!!".length; i++) ...[
+                    for (var i = 0; i < "Quizzz!!!".length; i++) ...[
                       TextSpan(
-                        text: "Riddles!!!"[i],
+                        text: "Quizzz!!!"[i],
                         style:
                             Theme.of(context).textTheme.headlineSmall!.copyWith(
                                   fontSize: 18 + i.toDouble(),
@@ -84,8 +89,11 @@ class ResultsScreen extends StatelessWidget {
                 ),
               ),
               ResultsCard(
-                  roundedPercentageScore: roundedPercentageScore,
-                  bgColor3: bgColor3),
+                roundedPercentageScore: roundedPercentageScore,
+                bgColor3: bgColor3,
+                playerName: playerName, 
+                playerScore: score, 
+              ),
               const SizedBox(
                 height: 25,
               ),
@@ -101,7 +109,7 @@ class ResultsScreen extends StatelessWidget {
                   Navigator.popUntil(context, (route) => route.isFirst);
                 },
                 child: const Text(
-                  "Take another test",
+                  "Réessaye encore",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 15,

@@ -6,10 +6,14 @@ class ResultsCard extends StatelessWidget {
     super.key,
     required this.roundedPercentageScore,
     required this.bgColor3,
+    required this.playerName,
+    required this.playerScore,
   });
 
   final int roundedPercentageScore;
   final Color bgColor3;
+  final String playerName;
+  final int playerScore;
 
   @override
   Widget build(BuildContext context) {
@@ -38,23 +42,32 @@ class ResultsCard extends StatelessWidget {
                         text: TextSpan(
                           children: [
                             for (var ii = 0;
-                                ii < "Congratulations!,".length;
+                                ii < "Félicitation!,".length;
                                 ii++) ...[
                               TextSpan(
-                                text: "Congratulations!,"[ii],
+                                text: "Félicitation!,"[ii],
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
                                     .copyWith(fontSize: 12 + ii.toDouble()),
                               ),
                             ],
-                            //m'adamfo(Twi) - my friend
                             TextSpan(
-                              text: "  m'adamfo\n You Scored  \n",
+                              text: "\n$playerName\n",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge!
+                                  .copyWith(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                            TextSpan(
+                              text: "Ton Score est de \n",
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                             TextSpan(
-                              text: "$roundedPercentageScore%",
+                              text: "$playerScore ($roundedPercentageScore%)",
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyLarge!
@@ -79,7 +92,7 @@ class ResultsCard extends StatelessWidget {
                             ? Column(
                                 children: [
                                   Text(
-                                    "You have Earned this Trophy",
+                                    "Tu as mérité ce trophé",
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyLarge!
@@ -97,7 +110,7 @@ class ResultsCard extends StatelessWidget {
                             : Column(
                                 children: [
                                   Text(
-                                    "I know You can do better!!",
+                                    "Je sais que tu peux faire mieux que ça!!",
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyLarge!

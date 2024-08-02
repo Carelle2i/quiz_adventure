@@ -6,11 +6,13 @@ class MyProgressIndicator extends StatefulWidget {
   final List<dynamic> questionlenght;
   final dynamic optionsList;
   final String topicType;
+  final String playerName; 
   const MyProgressIndicator({
     super.key,
     required this.questionlenght,
     required this.optionsList,
     required this.topicType,
+    required this.playerName, 
   });
 
   @override
@@ -47,6 +49,7 @@ class _MyProgressIndicatorState extends State<MyProgressIndicator> {
           questionlenght: widget.questionlenght,
           optionsList: widget.optionsList,
           topicType: widget.topicType,
+          playerName: widget.playerName,
         ),
       ),
     );
