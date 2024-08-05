@@ -1,52 +1,58 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:quiz_adventure/models/road_code_model.dart';
 import 'package:quiz_adventure/views/quiz_screen.dart';
 
 class MyProgressIndicator extends StatefulWidget {
-  final List<dynamic> questionlenght;
+  final List<dynamic> questions;
+    final List<RoadCodeQuestion> cards;
+
   final dynamic optionsList;
   final String topicType;
-  final String playerName; 
+  final String playerName;
+
   const MyProgressIndicator({
-    super.key,
-    required this.questionlenght,
+    Key? key,
+    required this.questions,
+    required this.cards,
+
     required this.optionsList,
     required this.topicType,
-    required this.playerName, 
-  });
+    required this.playerName,
+  }) : super(key: key);
 
   @override
-  State<MyProgressIndicator> createState() => _MyProgressIndicatorState();
+  _MyProgressIndicatorState createState() => _MyProgressIndicatorState();
 }
 
 class _MyProgressIndicatorState extends State<MyProgressIndicator> {
-  int timerSeconds = 45;
+  int remainingSeconds = 45;
   Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    startTimer();
+    _startTimer();
   }
 
-  void startTimer() {
+  void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
-        if (timerSeconds > 0) {
-          timerSeconds--;
+        if (remainingSeconds > 0) {
+          remainingSeconds--;
         } else {
           _timer?.cancel();
-          navigateToNewScreen();
+          _navigateToQuizScreen();
         }
       });
     });
   }
 
-  void navigateToNewScreen() {
+  void _navigateToQuizScreen() {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => QuizScreen(
-          questionlenght: widget.questionlenght,
+          questions: widget.cards,
           optionsList: widget.optionsList,
           topicType: widget.topicType,
           playerName: widget.playerName,
@@ -63,17 +69,15 @@ class _MyProgressIndicatorState extends State<MyProgressIndicator> {
 
   @override
   Widget build(BuildContext context) {
-    const Color bgColor = Color(0xFF4993FA);
-    return Expanded(
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: LinearProgressIndicator(
-          minHeight: 20,
-          value: 1 - (timerSeconds / 45),
-          backgroundColor: Colors.blue.shade100,
-          color: Colors.blueGrey,
-          valueColor: const AlwaysStoppedAnimation(bgColor),
-        ),
+    const Color progressBarColor = Color(0xFF4993FA);
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: LinearProgressIndicator(
+        minHeight: 20,
+        value: 1 - (remainingSeconds / 45),
+        backgroundColor: Colors.blue.shade100,
+        color: Colors.blueGrey,
+        valueColor: const AlwaysStoppedAnimation(progressBarColor),
       ),
     );
   }

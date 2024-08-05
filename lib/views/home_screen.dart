@@ -150,8 +150,8 @@ class _HomePageState extends State<HomePage> {
                                                     FlashCardScreen(
                                                   cards: category.questions,
                                                   topicName:
-                                                      category.categoryName,
-                                                  playerName: playerName!,
+                                                  category.categoryName,
+                                                  playerName: playerName!, optionsList: null,
                                                 ),
                                               ),
                                             );

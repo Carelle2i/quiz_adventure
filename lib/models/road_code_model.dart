@@ -16,7 +16,7 @@ class RoadCodeQuestion {
   final List<RoadCodeOption> options;
   bool isLocked;
   RoadCodeOption? selectedOption;
-  RoadCodeOption? correctAnswer;
+  final RoadCodeOption correctAnswer;
 
   RoadCodeQuestion({
     required this.id,
@@ -27,16 +27,21 @@ class RoadCodeQuestion {
     required this.correctAnswer,
   });
 
-  RoadCodeQuestion copyWith() {
+  RoadCodeQuestion copyWith({
+    int? id,
+    String? text,
+    List<RoadCodeOption>? options,
+    bool? isLocked,
+    RoadCodeOption? selectedOption,
+    RoadCodeOption? correctAnswer,
+  }) {
     return RoadCodeQuestion(
-      id: id,
-      text: text,
-      options: options
-          .map((option) => RoadCodeOption(text: option.text, isCorrect: option.isCorrect))
-          .toList(),
-      isLocked: isLocked,
-      selectedOption: selectedOption,
-      correctAnswer: correctAnswer,
+      id: id ?? this.id,
+      text: text ?? this.text,
+      options: options ?? this.options,
+      isLocked: isLocked ?? this.isLocked,
+      selectedOption: selectedOption ?? this.selectedOption,
+      correctAnswer: correctAnswer ?? this.correctAnswer,
     );
   }
 }

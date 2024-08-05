@@ -1,20 +1,20 @@
 import 'package:flip_card/flip_card.dart';
-
 import 'package:flutter/material.dart';
 
 class FlipCardsWidget extends StatelessWidget {
-  const FlipCardsWidget(
-      {super.key,
-      required this.bgColor,
-      required this.currentIndex,
-      required this.cardsLenght,
-      required this.question,
-      required this.answer,
-      required this.currentTopic});
+  const FlipCardsWidget({
+    super.key,
+    required this.bgColor,
+    required this.currentIndex,
+    required this.cardsLength,
+    required this.question,
+    required this.answer,
+    required this.currentTopic,
+  });
 
   final Color bgColor;
   final int currentIndex;
-  final int cardsLenght;
+  final int cardsLength;
   final String question;
   final String answer;
   final String currentTopic;
@@ -61,7 +61,7 @@ class FlipCardsWidget extends StatelessWidget {
                             ),
                       ),
                       Text(
-                        "$currentIndex/$cardsLenght",
+                        "$currentIndex/$cardsLength",
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
                               color: Colors.white,
                               fontSize: 15,
@@ -74,15 +74,16 @@ class FlipCardsWidget extends StatelessWidget {
                     child: Text(
                       question,
                       style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500),
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                          ),
                       textAlign: TextAlign.center,
                     ),
                   ),
                   const Spacer(),
                   Text(
-                    "Tap to Flip",
+                    "Click pour retourner",
                     style: Theme.of(context)
                         .textTheme
                         .bodySmall!
@@ -155,14 +156,14 @@ class FlipCardsWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Answer",
+                        "Réponse",
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
                               color: Colors.white,
                               fontSize: 15,
                             ),
                       ),
                       Text(
-                        "$currentIndex/$cardsLenght",
+                        "$currentIndex/$cardsLength",
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
                               color: Colors.white,
                               fontSize: 15,
